@@ -11,11 +11,14 @@ Poniższe zadania będą się sprowadzały do modyfikacji bazowego kodu. Proces 
 
 //Commit6_1. Na podstawie analogii do wyjątku WrongStudentName utwórz i obsłuż wyjątki WrongAge oraz WrongDateOfBirth. 
 //Niepoprawny wiek – gdy jest mniejszy od 0 lub większy niż 100. Niepoprawna data urodzenia – gdy nie jest zapisana w formacie DD-MM-YYYY, np. 28-02-2023.
-
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.io.IOException;
 import java.util.Scanner;
 
 class WrongStudentName extends Exception { }
+class WrongAge extends Exception { }
+class WrongDateOfBirth extends Exception { }
 
 class Main {
     public static Scanner scan = new Scanner(System.in);
@@ -31,13 +34,21 @@ class Main {
                     default: return;
                 }
             } catch(IOException e) {
-
-            } catch(WrongStudentName e) {
+                
+            }
+             catch(WrongStudentName e) {
                 System.out.println("Błędne imię studenta!");
             }
+            catch(WrongAge e) {
+                 System.out.println("Błędny wiek studenta!");
+            }
+            catch(WrongDateOfBirth e) {
+                 System.out.println("Błędna data urodzenia sudenta!");
+            
+            }
+            
         }
     }
-
     public static int menu() {
         System.out.println("Wciśnij:");
         System.out.println("1 - aby dodać studenta");
@@ -57,13 +68,17 @@ class Main {
         return name;
     }
 
-    public static void exercise1() throws IOException, WrongStudentName {
+    public static void exercise1() throws IOException, WrongStudentName, WrongAge, WrongDateOfBirth {
         var name = ReadName();
         System.out.println("Podaj wiek: ");
         var age = scan.nextInt();
+        if(age<0 || age>100)
+            throw new WrongAge();
         scan.nextLine();
         System.out.println("Podaj datę urodzenia DD-MM-YYYY");
         var date = scan.nextLine();
+        if(!date.matches("\\d{2}-\\d{2}-\\d{4}"))
+            throw new WrongDateOfBirth();
         (new Service()).addStudent(new Student(name, age, date));
     }
 
